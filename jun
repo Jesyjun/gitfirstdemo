@@ -1,0 +1,5 @@
+Linux@ubuntu:~/Shell$ export TEST="TEST..."
+Linux@ubuntu:~/Shell$ env|grep TEST
+TEST=Test...
+Linux@ubuntu:~/Shell$ unset $TEST
+Linux@ubuntu:~/Shell$ env|grep TEST
