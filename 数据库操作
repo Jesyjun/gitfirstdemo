@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <sqlite3.h>
+
+static int callback(void *not_used,int argc,char **argv,char **col_name)
+{
+    static printf_head = 0;
+    int i = 0;
+    if(0 == printf_head)
+    {
+        for(i = 0;i < argc;i++)
+        {
+	    printf("%s\t",col_name[i]);
+	}
+	printf("\n");
+	printf_head = 1;
+    }
+    for(i = 0;i < argc;i++)
+    {
+        printf("%s\t",argv[i]?argv[i]:"NULL");
+    }
+    printf("\n");
+    return 0;
+}
+
+int main(int argc,char *argv[])
+{ 
+    sqlite3 *db = NULL;
+    char *err_msg = NULL;
+
+    int rc = sqlite3_open("score_mgr_01.db",&db);
+    if(rc != SQLITE_OK)
+    {
+        fprintf(stderr,"open failed:%s\n",sqlite3_errmsg(db));
+    }
+    else
+    {
+        fprintf(stderr,"open database successfully\n");
+    }
+
+    char *sql_select_student = "select id,age from student;";
+
+    rc = sqlite3_exec(db,sql_select_student,callback,0,&err_msg);
+    if(SQLITE_OK != rc)
+    {
+        fprintf(stderr,"sql error:%s\n",err_msg);
+	sqlite3_free(err_msg);
+    }
+    else
+    {
+        fprintf(stdout,"table query successfully\n");
+    }
+
+    sqlite3_close(db);
+    return 0;
+}
