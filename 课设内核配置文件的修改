@@ -1,0 +1,34 @@
+多配置启动的配置文件修改
+如果你用 GRUB或 LILO 配置文件启动，则要修改该文件。以grub.conf文件为例
+default=0
+timeout=10
+splashimage=(hd0,1)/boot/grub/splash.xpm.gz
+title Red Hat Linux (2.4.20-8)
+root (hd0,1)
+kernel /boot/vmlinuz-2.4.20-8 ro root=LABEL=/
+initrd /boot/initrd-2.4.20-8.img
+title WinXP
+rootnoverify (hd0,0)
+chainloader +1
+第1种方案，不增加启动选项：
+把 grub.conf 文件中的以下行：
+kernel /boot/vmlinuz-2.4.20-8 ro root=LABEL=/
+改为：
+kernel /boot/zImage ro root=LABEL=/
+第2种方案，增加一个启动选项；grub.conf文件修改为：
+default=0
+timeout=10
+splashimage=(hd0,1)/boot/grub/splash.xpm.gz
+title Red Hat Linux (2.4.20-8)
+root (hd0,1)
+kernel /boot/vmlinuz-2.4.20-8 ro root=LABEL=/
+initrd /boot/initrd-2.4.20-8.img
+title Red Hat Linux-new (2.4.20-8)
+root (hd0,1)
+kernel /boot/bzImage ro root=LABEL=/
+initrd /boot/initrd-2.4.20-8.img
+title WinXP
+rootnoverify (hd0,0)
+chainloader +1
+修改后保存文件，如果是用LILO一定要在超级用户提示符下执行lilo 或lilo –v 
+令以使配置文件生效；如果用GRUB则无须执行命令。重启系统后则可以用 Linux 新的内核启动了。
